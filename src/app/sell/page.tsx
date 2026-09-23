@@ -1,4 +1,30 @@
+"use client";
+
+import { useState } from "react";
+
 export default function SellPage() {
+  const [status, setStatus] = useState("");
+
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setStatus("Saving...");
+    const form = new FormData(e.currentTarget);
+    const body = Object.fromEntries(form.entries());
+
+    const res = await fetch("/api/listings", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+
+    if (res.ok) {
+      setStatus("Listing saved. It should now appear in Search.");
+      e.currentTarget.reset();
+    } else {
+      setStatus("Could not save. Check the listing and try again.");
+    }
+  }
+
   return (
     <div style={{ fontFamily: "Arial, sans-serif", color: "#1a2332" }}>
       <header style={{ background: "#0f2744", color: "white", padding: "16px 24px", display: "flex", justifyContent: "space-between" }}>
@@ -9,23 +35,12 @@ export default function SellPage() {
       <main style={{ maxWidth: 900, margin: "0 auto", padding: 32 }}>
         <h1>Sell Equipment</h1>
         <p>List surplus electrical equipment for contractors.</p>
-        <p style={{ background: "#f4f6f8", padding: 12 }}>
-          This form is the seller layout. Listings will save after we connect the database. Do not take live orders yet.
-        </p>
+        {status ? <p style={{ background: "#f4f6f8", padding: 12 }}>{status}</p> : null}
 
-        <form style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginTop: 24 }}>
-          <label>
-            Title
-            <input name="title" style={{ width: "100%", padding: 10, marginTop: 6 }} />
-          </label>
-          <label>
-            Manufacturer
-            <input name="manufacturer" style={{ width: "100%", padding: 10, marginTop: 6 }} />
-          </label>
-          <label>
-            Part / model number
-            <input name="partNumber" style={{ width: "100%", padding: 10, marginTop: 6 }} />
-          </label>
+        <form onSubmit={onSubmit} style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginTop: 24 }}>
+          <label>Title<input name="title" required style={{ width: "100%", padding: 10, marginTop: 6 }} /></label>
+          <label>Manufacturer<input name="manufacturer" style={{ width: "100%", padding: 10, marginTop: 6 }} /></label>
+          <label>Part / model number<input name="partNumber" style={{ width: "100%", padding: 10, marginTop: 6 }} /></label>
           <label>
             Category
             <select name="category" style={{ width: "100%", padding: 10, marginTop: 6 }}>
@@ -48,32 +63,13 @@ export default function SellPage() {
               <option>Surplus</option>
             </select>
           </label>
-          <label>
-            Amps / Voltage / Poles
-            <input name="specs" style={{ width: "100%", padding: 10, marginTop: 6 }} />
-          </label>
-          <label>
-            Price
-            <input name="price" type="number" step="0.01" style={{ width: "100%", padding: 10, marginTop: 6 }} />
-          </label>
-          <label>
-            Quantity
-            <input name="quantity" type="number" style={{ width: "100%", padding: 10, marginTop: 6 }} />
-          </label>
-          <label style={{ gridColumn: "1 / -1" }}>
-            Description
-            <textarea name="description" rows={5} style={{ width: "100%", padding: 10, marginTop: 6 }} />
-          </label>
-          <label>
-            City
-            <input name="city" style={{ width: "100%", padding: 10, marginTop: 6 }} />
-          </label>
-          <label>
-            State
-            <input name="state" style={{ width: "100%", padding: 10, marginTop: 6 }} />
-          </label>
-          <p style={{ gridColumn: "1 / -1" }}>Photo upload will be added after the database is connected.</p>
-          <button type="button" style={{ gridColumn: "1 / -1", background: "#c45c26", color: "white", padding: 14, border: 0 }}>
+          <label>Amps / Voltage / Poles<input name="specs" style={{ width: "100%", padding: 10, marginTop: 6 }} /></label>
+          <label>Price<input name="price" type="number" step="0.01" style={{ width: "100%", padding: 10, marginTop: 6 }} /></label>
+          <label>Quantity<input name="quantity" type="number" style={{ width: "100%", padding: 10, marginTop: 6 }} /></label>
+          <label style={{ gridColumn: "1 / -1" }}>Description<textarea name="description" rows={5} style={{ width: "100%", padding: 10, marginTop: 6 }} /></label>
+          <label>City<input name="city" style={{ width: "100%", padding: 10, marginTop: 6 }} /></label>
+          <label>State<input name="state" style={{ width: "100%", padding: 10, marginTop: 6 }} /></label>
+          <button type="submit" style={{ gridColumn: "1 / -1", background: "#c45c26", color: "white", padding: 14, border: 0 }}>
             Publish listing
           </button>
         </form>
