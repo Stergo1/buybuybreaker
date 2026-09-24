@@ -17,7 +17,7 @@ export async function POST(request: Request) {
   const rows = await sql`
     INSERT INTO listings (
       title, manufacturer, part_number, category, condition,
-      specs, price, quantity, description, city, state
+      specs, price, quantity, description, city, state, clerk_user_id
     )
     VALUES (
       ${body.title},
@@ -30,7 +30,8 @@ export async function POST(request: Request) {
       ${body.quantity || null},
       ${body.description},
       ${body.city},
-      ${body.state}
+      ${body.state},
+      ${body.clerkUserId || null}
     )
     RETURNING id
   `;
