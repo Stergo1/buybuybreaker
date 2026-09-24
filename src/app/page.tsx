@@ -7,6 +7,8 @@ export default function HomePage() {
         <strong>Buy Buy Breaker</strong>
         <nav>
           <Link href="/search" style={{ color: "white", marginRight: 16 }}>Search</Link>
+          <Link href="/sign-in" style={{ color: "white", marginRight: 16 }}>Sign In</Link>
+          <Link href="/sign-up" style={{ color: "white", marginRight: 16 }}>Create Account</Link>
           <Link href="/sell" style={{ background: "#c45c26", color: "white", padding: "8px 14px", textDecoration: "none" }}>
             Sell Equipment
           </Link>
