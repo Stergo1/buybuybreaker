@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { useUser } from "@clerk/nextjs";
 
 export default function SellPage() {
   const [status, setStatus] = useState("");
+  const { user } = useUser();
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -14,7 +16,7 @@ export default function SellPage() {
     const res = await fetch("/api/listings", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
+      body: JSON.stringify({ ...body, clerkUserId: user?.id || null }),
     });
 
     if (res.ok) {
@@ -35,6 +37,7 @@ export default function SellPage() {
       <main style={{ maxWidth: 900, margin: "0 auto", padding: 32 }}>
         <h1>Sell Equipment</h1>
         <p>List surplus electrical equipment for contractors.</p>
+        {user ? <p>Signed in as {user.primaryEmailAddress?.emailAddress}</p> : <p><a href="/sign-in">Sign in</a> to attach this listing to your account.</p>}
         {status ? <p style={{ background: "#f4f6f8", padding: 12 }}>{status}</p> : null}
 
         <form onSubmit={onSubmit} style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginTop: 24 }}>
